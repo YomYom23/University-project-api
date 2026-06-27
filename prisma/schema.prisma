@@ -19,40 +19,44 @@ enum UserRole {
 }
 
 model User {
-  id                 String              @id @default(cuid())
-  firstName          String
-  lastName           String
-  email              String
-  password           String
-  role               UserRole
-  createdAt          DateTime            @default(now())
-  studentProfiles    StudentProfile[]
-  universityProfiles UniversityProfile[]
+  id                String             @id @default(cuid())
+  email             String             @unique
+  password          String
+  role              UserRole           @default(STUDENT)
+  createdAt         DateTime           @default(now())
+  studentProfile    StudentProfile?
+  universityProfile UniversityProfile?
 }
 
 model StudentProfile {
-  id              String @id @default(uuid())
-  userId          String
-  gpa             Float
-  satScore        Float
-  actScore        Float
-  intendedMajor   Float
-  budgetMax       Int
-  preferredRegion String
+  userId             String   @id
+  firstName          String
+  lastName           String
+  age                String
+  gpa                Float
+  country            String
+  highSchool         String?
+  graduationYear     String
+  preferredLocations String[]
+  preferredMajors    String[]
+  careerGoals        String?  @db.Text
+  satScore           Float
+  actScore           Float
+  budgetRange        Int[]
+  preferredRegion    String
 
   // relations
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model UniversityProfile {
-  id             String @id @default(cuid())
-  userId         String
-  name           String
+  userId         String @id
+  universityName String
   location       String
   annualTuition  Int
   avgGpaCutOff   Float
   accpetanceRate Float
-  description    String
+  description    String @db.Text
 
   //relations
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
