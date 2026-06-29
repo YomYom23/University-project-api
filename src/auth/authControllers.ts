@@ -26,16 +26,17 @@ const registration = async (req: Request, res: Response) => {
             email,
             password: hashedPassword,
             role: role as UserRole,
+            userOnboarding: {create:{}}
         }
     })
 
-    const token = generateToken(user.id, res)
+
+    generateToken(user.id, res)
 
     res.status(201).json({
         status: "success",
         data: {
             user,
-            token,
         }
     });
 }
