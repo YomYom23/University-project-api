@@ -18,6 +18,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
         token = req.cookies.jwt;
     }
 
+
     // Handle unauthorized request
     if (!token) {
         return res.status(401).json({ error: "Unauthorized" });

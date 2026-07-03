@@ -26,7 +26,6 @@ const registration = async (req: Request, res: Response) => {
             email,
             password: hashedPassword,
             role: role as UserRole,
-            userOnboarding: {create:{}}
         }
     })
 

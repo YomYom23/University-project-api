@@ -30,39 +30,30 @@ const createStudentProfile = async (req: Request, res: Response) => {
 };
 
 const updateUser = async (req: Request, res: Response) => {
-    const { userId,     value } = req.query = req.query
+    const { id } = req.params
+    const { email, userOnboarding } = req.body
 
     const user = await prisma.user.findUnique({
-        where: { id: userId as string}
+        where: { id: id as string}
     })
 
-    if(!user){
+    if(!user) {
         return res.status(400).json({error: "User not found"})
     }
-
-    let updatedUser;
-
-    if(Array.isArray(field)){
-        updatedUser = await prisma.user.update({
-            where: { id: userId as string },
-            data: {
-                [field[0] as string]: {
-                    [field[1] as string]: value
-                },
-            }
-            }
-        )
-    } else {
-        updatedUser = await prisma.user.update({
-                where: { id: userId as string },
-                data: {
-                    [field as string]: value,
-                }
-            }
-        )
+    const updateFields: Record<string, any> = {}
+    if (email) { updateFields.email = email }
+    if (userOnboarding) {
+        updateFields.userOnboarding = {
+            update: userOnboarding
+        }
     }
 
-    return res.status(200).json({
+    const updatedUser = await prisma.user.update({
+        where: { id: id as string },
+        data: updateFields
+    })
+
+    res.status(200).json({
         status: "success",
         data: updatedUser,
     })

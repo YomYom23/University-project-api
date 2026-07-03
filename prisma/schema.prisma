@@ -19,16 +19,17 @@ enum UserRole {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  role      UserRole @default(STUDENT)
-  createdAt DateTime @default(now())
+  id             String   @id @default(cuid())
+  email          String   @unique
+  password       String
+  role           UserRole @default(STUDENT)
+  createdAt      DateTime @default(now())
+  isOnboarding   Boolean  @default(true)
+  onboardingStep Int      @default(0)
 
   //relations
   studentProfile    StudentProfile?
   universityProfile UniversityProfile?
-  userOnboarding    UserOnboarding?
 }
 
 model StudentProfile {
@@ -62,13 +63,5 @@ model UniversityProfile {
   description    String @db.Text
 
   //relations
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model UserOnboarding {
-  userId      String @id
-  currentStep Int    @default(1)
-
-  //relation
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
