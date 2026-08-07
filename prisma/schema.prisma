@@ -24,8 +24,7 @@ model User {
   password       String
   role           UserRole @default(STUDENT)
   createdAt      DateTime @default(now())
-  isOnboarding   Boolean  @default(true)
-  onboardingStep Int      @default(0)
+  onboardingStep Int?     @default(0)
 
   //relations
   studentProfile    StudentProfile?
@@ -33,21 +32,29 @@ model User {
 }
 
 model StudentProfile {
-  userId             String   @id
-  firstName          String
-  lastName           String
-  age                String
-  gpa                Float
+  userId String @id
+
+  // Basic info
+  firstName   String
+  lastName    String
+  dateOfBirth DateTime
+  phone       String?
+
+  // Academic History
+  gpa            Float
+  highSchool     String?
+  graduationYear String
+  satScore       Float?
+  actScore       Float?
+  intendedMajors String[]
+
+  // Location
   country            String
-  highSchool         String?
-  graduationYear     String
   preferredLocations String[]
-  preferredMajors    String[]
-  careerGoals        String?  @db.Text
-  satScore           Float
-  actScore           Float
-  budgetRange        Int[]
   preferredRegion    String
+
+  careerGoals String? @db.Text
+  budgetRange Int[]
 
   // relations
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)

@@ -30,11 +30,11 @@ const createStudentProfile = async (req: Request, res: Response) => {
 };
 
 const updateUser = async (req: Request, res: Response) => {
-    const { id } = req.params
-    const { email, userOnboarding } = req.body
+    const userId = req.user?.id
+    const { email, isOnboarding, onboardingStep } = req.body
 
     const user = await prisma.user.findUnique({
-        where: { id: id as string}
+        where: { id: userId as string}
     })
 
     if(!user) {
@@ -42,15 +42,19 @@ const updateUser = async (req: Request, res: Response) => {
     }
     const updateFields: Record<string, any> = {}
     if (email) { updateFields.email = email }
-    if (userOnboarding) {
-        updateFields.userOnboarding = {
-            update: userOnboarding
-        }
+    if (isOnboarding) { updateFields.isOnboarding = isOnboarding }
+    if (onboardingStep) {
+        updateFields.onboardingStep = onboardingStep > 3 ? null : onboardingStep
+    }
+
+
+    if(Object.keys(updateFields).length === 0) {
+        return res.status(400).json({error: "No fields provided to update"})
     }
 
     const updatedUser = await prisma.user.update({
-        where: { id: id as string },
-        data: updateFields
+        where: { id: userId as string },
+        data: updateFields,
     })
 
     res.status(200).json({

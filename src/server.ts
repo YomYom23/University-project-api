@@ -17,15 +17,15 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
     origin: "http://localhost:5173",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type"],
     credentials: true,
 }))
 app.use(express.urlencoded({ extended: true }))
 
 // Routes
 app.use("/auth", authRoutes)
-app.use("/user", userRoutes)
+app.use("/users", userRoutes)
 
 const server = app.listen(3000)
 
