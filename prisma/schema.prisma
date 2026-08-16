@@ -18,6 +18,12 @@ enum UserRole {
   ADMIN
 }
 
+enum CampusSize {
+  SMALL
+  MEDIUM
+  LARGE
+}
+
 model User {
   id             String   @id @default(cuid())
   email          String   @unique
@@ -44,20 +50,25 @@ model StudentProfile {
   gpa            Float
   highSchool     String?
   graduationYear String
+  major          String
   satScore       Float?
   actScore       Float?
   intendedMajors String[]
+  classRank      String?
 
   // Location
   country            String
   preferredLocations String[]
   preferredRegion    String
 
-  careerGoals String? @db.Text
-  budgetRange Int[]
-
+  careerGoals      String?    @db.Text
+  budgetRange      Int[]
+  size             CampusSize
+  campusVibes      String[]
+  extracurriculars String[]
+  priority         String?
   // relations
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model UniversityProfile {
