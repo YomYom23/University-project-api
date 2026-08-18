@@ -31,33 +31,20 @@ const createStudentProfile = async (req: Request, res: Response) => {
 
 const updateUser = async (req: Request, res: Response) => {
     const userId = req.user?.id
-    const {
-        email, onboardingStep, firstName, lastName,
-        dateOfBirth, country, gpa, sat, act, major,
-        highSchool, graduationYear, classRank, preferredMajors,
-        preferredLocations, size, budgetRange, campusVibes,
-        extracurriculars, careerGoal, priority
-    } = req.body
 
     const user = await prisma.user.findUnique({
         where: { id: userId as string}
     })
-
     if(!user) {
         return res.status(400).json({error: "User not found"})
     }
 
-    const updateFields: Record<string, any> = {}
-    if (email) { updateFields.email = email }
-    if (firstName) { updateFields.firstName = firstName }
-    if (lastName) { updateFields.lastName = lastName }
-    if (dateOfBirth) { updateFields.dateOfBirth = dateOfBirth }
-    if (country) { updateFields.country = country }
-    if (gpa) { updateFields.gpa = gpa }
-    if (sat) { updateFields.sat = sat }
-    if (act) { updateFields.act = act }
-    if (major) { updateFields.major = major }
-    if (onboardingStep) {
+    const updateFields: Record<string, any> = Object.fromEntries(
+        Object.entries(req.body.userData ?? {}).filter(([field, value]) => value !== undefined)
+    )
+
+    if (updateFields.onboardingStep) {
+        const onboardingStep = updateFields.onboardingStep
         updateFields.onboardingStep = onboardingStep > 3 ? null : onboardingStep
     }
 
