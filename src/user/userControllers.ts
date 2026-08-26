@@ -30,23 +30,38 @@ const createStudentProfile = async (req: Request, res: Response) => {
 };
 
 const updateUser = async (req: Request, res: Response) => {
+    const { userData, studentData } = req.body;
     const userId = req.user?.id
 
     const user = await prisma.user.findUnique({
-        where: { id: userId as string}
+        where: { id: userId as string },
+        include: { studentProfile: true }
     })
     if(!user) {
         return res.status(400).json({error: "User not found"})
     }
 
+    if(studentData && !user.studentProfile) {
+       await prisma.user.update({
+        where: { id: userId as string },
+        data: {
+            studentProfile: {
+                create: {
+                    firstName: studentData.firstName as string,
+                    lastName: studentData.lastName as string,
+                    dateOfBirth: new Date(studentData.dateOfBirth)
+                }
+            }
+       }
+        })
+    }
+
     const updateFields: Record<string, any> = Object.fromEntries(
-        Object.entries(req.body.userData ?? {}).filter(([field, value]) => value !== undefined)
+        Object.entries({ ...req.body.userData, ...req.body.studentData, ...req.body.universityData })
+            .filter(([field, value]) => value !== undefined)
     )
 
-    if (updateFields.onboardingStep) {
-        const onboardingStep = updateFields.onboardingStep
-        updateFields.onboardingStep = onboardingStep > 3 ? null : onboardingStep
-    }
+
 
 
     if(Object.keys(updateFields).length === 0) {
@@ -56,6 +71,7 @@ const updateUser = async (req: Request, res: Response) => {
     const updatedUser = await prisma.user.update({
         where: { id: userId as string },
         data: updateFields,
+
     })
 
     res.status(200).json({

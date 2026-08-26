@@ -47,28 +47,28 @@ model StudentProfile {
   phone       String?
 
   // Academic History
-  gpa            Float
+  gpa            Float?
   highSchool     String?
-  graduationYear String
-  major          String
+  graduationYear String?
+  major          String?
   satScore       Float?
   actScore       Float?
   intendedMajors String[]
   classRank      String?
 
   // Location
-  country            String
+  country            String?
   preferredLocations String[]
-  preferredRegion    String
+  preferredRegion    String?
 
-  careerGoals      String?    @db.Text
+  careerGoals      String?     @db.Text
   budgetRange      Int[]
-  size             CampusSize
+  size             CampusSize?
   campusVibes      String[]
   extracurriculars String[]
   priority         String?
   // relations
-  user             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user             User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model UniversityProfile {

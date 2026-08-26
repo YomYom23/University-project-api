@@ -1,0 +1,33 @@
+import { serve } from "@hono/node-server";
+import { Hono } from "hono";
+import { prisma } from "./lib/prisma";
+
+const app = new Hono();
+
+app.get("/", (c) => {
+  return c.json({
+    message: "hello from create-prisma + hono",
+  });
+});
+
+app.get("/users", async (c) => {
+  const users = await prisma.user.findMany({
+    take: 10,
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return c.json(users);
+});
+
+const rawPort = (process.env.PORT ?? "").trim();
+const parsedPort = rawPort.length > 0 ? Number(rawPort) : Number.NaN;
+const port =
+  Number.isInteger(parsedPort) && parsedPort >= 0 && parsedPort <= 65535 ? parsedPort : 8080;
+serve({
+  fetch: app.fetch,
+  port,
+});
+
+console.log(`Server running at http://localhost:${port}`);
