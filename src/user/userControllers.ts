@@ -68,11 +68,7 @@ const updateUser = async (req: Request, res: Response) => {
         return res.status(400).json({error: "No fields provided to update"})
     }
 
-    const updatedUser = await prisma.user.update({
-        where: { id: userId as string },
-        data: updateFields,
-
-    })
+    const updatedUser = await prisma.user.
 
     res.status(200).json({
         status: "success",

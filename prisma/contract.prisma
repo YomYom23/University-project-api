@@ -1,0 +1,79 @@
+// use prisma-next
+// Contract inferred from the live database schema. Edit as needed, then run `prisma contract emit`.
+
+namespace public {
+  model PrismaMigrations {
+    id                VarChar(36)  @id(map: "_prisma_migrations_pkey")
+    checksum          VarChar(64)
+    finishedAt        Timestamptz? @map("finished_at")
+    migrationName     VarChar(255) @map("migration_name")
+    logs              String?
+    rolledBackAt      Timestamptz? @map("rolled_back_at")
+    startedAt         Timestamptz  @default(now()) @map("started_at")
+    appliedStepsCount Int          @default(0) @map("applied_steps_count")
+
+    @@map("_prisma_migrations")
+  }
+
+  model User {
+    id                String             @id(map: "User_pkey")
+    email             String
+    password          String
+    role              pg.enum(UserRole)  @default("STUDENT")
+    createdAt         Timestamp(3)       @default(now())
+    onboardingStep    Int?               @default(0)
+    studentProfile    StudentProfile?
+    universityProfile UniversityProfile?
+
+    @@index([email], map: "User_email_key", unique: true)
+  }
+
+  model StudentProfile {
+    userId             String               @id(map: "StudentProfile_pkey")
+    gpa                Float?
+    satScore           Float?
+    actScore           Float?
+    preferredRegion    String?
+    country            String?
+    graduationYear     String?
+    highSchool         String?
+    careerGoals        String?
+    preferredLocations String[]             @noCheck(elementNotNull)
+    firstName          String
+    lastName           String
+    budgetRange        Int[]                @noCheck(elementNotNull)
+    dateOfBirth        Timestamp(3)
+    intendedMajors     String[]             @noCheck(elementNotNull)
+    phone              String?
+    campusVibes        String[]             @noCheck(elementNotNull)
+    classRank          String?
+    extracurriculars   String[]             @noCheck(elementNotNull)
+    major              String?
+    priority           String?
+    size               pg.enum(CampusSize)?
+    user               User                 @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "StudentProfile_userId_fkey")
+  }
+
+  model UniversityProfile {
+    userId         String @id(map: "UniversityProfile_pkey")
+    location       String
+    annualTuition  Int
+    avgGpaCutOff   Float
+    accpetanceRate Float
+    description    String
+    universityName String
+    user           User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "UniversityProfile_userId_fkey")
+  }
+
+  native_enum CampusSize {
+    SMALL = "SMALL"
+    MEDIUM = "MEDIUM"
+    LARGE = "LARGE"
+  }
+
+  native_enum UserRole {
+    STUDENT = "STUDENT"
+    UNIVERSITY_REP = "UNIVERSITY_REP"
+    ADMIN = "ADMIN"
+  }
+}
