@@ -1,20 +1,9 @@
 import "dotenv/config"
-import { PrismaClient } from "../../generated/prisma/client.js"
-import { PrismaPg } from "@prisma/adapter-pg"
-
-const connectionString = `${process.env.DATABASE_URL}`;
-
-const adapter = new PrismaPg({connectionString});
-
-const prisma = new PrismaClient({
-    adapter:adapter,
-    log: process.env.NODE_ENV === 'development'
-         ? ['query', 'error', 'warn'] : ['error']
-});
+import { db } from "../../prisma/db.ts"
 
 const connectDB = async () => {
     try {
-        await prisma.$connect();
+        await db.orm.User.count();
         console.log("DB connected via prisma");
     } catch (err) {
         if (err instanceof Error) {
@@ -27,7 +16,7 @@ const connectDB = async () => {
 }
 
 const disconnectDB = async () => {
-    await prisma.$disconnect();
+    await db.close();
 }
 
-export { prisma, connectDB, disconnectDB };
+export { db, connectDB, disconnectDB };

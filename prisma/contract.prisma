@@ -13,10 +13,11 @@ namespace public {
     appliedStepsCount Int          @default(0) @map("applied_steps_count")
 
     @@map("_prisma_migrations")
+    @@control(external)
   }
 
   model User {
-    id                String             @id(map: "User_pkey")
+    id                String             @id(map: "User_pkey") @default(cuid(2))
     email             String
     password          String
     role              pg.enum(UserRole)  @default("STUDENT")
@@ -26,6 +27,7 @@ namespace public {
     universityProfile UniversityProfile?
 
     @@index([email], map: "User_email_key", unique: true)
+    @@map("User")
   }
 
   model StudentProfile {
@@ -38,20 +40,22 @@ namespace public {
     graduationYear     String?
     highSchool         String?
     careerGoals        String?
-    preferredLocations String[]             @noCheck(elementNotNull)
+    preferredLocations String[]?            @noCheck(elementNotNull)
     firstName          String
     lastName           String
-    budgetRange        Int[]                @noCheck(elementNotNull)
+    budgetRange        Int[]?               @noCheck(elementNotNull)
     dateOfBirth        Timestamp(3)
-    intendedMajors     String[]             @noCheck(elementNotNull)
+    intendedMajors     String[]?            @noCheck(elementNotNull)
     phone              String?
-    campusVibes        String[]             @noCheck(elementNotNull)
+    campusVibes        String[]?            @noCheck(elementNotNull)
     classRank          String?
-    extracurriculars   String[]             @noCheck(elementNotNull)
+    extracurriculars   String[]?            @noCheck(elementNotNull)
     major              String?
     priority           String?
     size               pg.enum(CampusSize)?
     user               User                 @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "StudentProfile_userId_fkey")
+
+    @@map("StudentProfile")
   }
 
   model UniversityProfile {
@@ -63,6 +67,8 @@ namespace public {
     description    String
     universityName String
     user           User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "UniversityProfile_userId_fkey")
+
+    @@map("UniversityProfile")
   }
 
   native_enum CampusSize {

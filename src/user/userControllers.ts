@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { prisma } from '../config/db.ts';
+import { db } from '../config/db.ts';
 
 
 const createStudentProfile = async (req: Request, res: Response) => {
@@ -10,9 +10,9 @@ const createStudentProfile = async (req: Request, res: Response) => {
     } = req.body;
 
     //Check if user exists
-    const user = await prisma.user.findUnique({
-        where: { id: userId }
-    })
+    const user = await db.orm.public.User
+        .where({ id: userId })
+        .first()
 
     if(!user) {
         return res.status(400).json({error: "User not found"})
@@ -33,27 +33,19 @@ const updateUser = async (req: Request, res: Response) => {
     const { userData, studentData } = req.body;
     const userId = req.user?.id
 
-    const user = await prisma.user.findUnique({
-        where: { id: userId as string },
-        include: { studentProfile: true }
-    })
+    const user = await db.orm.public.User
+        .where({ id: userId })
+        .include("StudentProfile")
+        .first()
+
     if(!user) {
         return res.status(400).json({error: "User not found"})
     }
 
     if(studentData && !user.studentProfile) {
-       await prisma.user.update({
-        where: { id: userId as string },
-        data: {
-            studentProfile: {
-                create: {
-                    firstName: studentData.firstName as string,
-                    lastName: studentData.lastName as string,
-                    dateOfBirth: new Date(studentData.dateOfBirth)
-                }
-            }
-       }
-        })
+       await db.orm.public.StudentProfile.create({
+           firstName: req.body.studentData.firstName,
+       })
     }
 
     const updateFields: Record<string, any> = Object.fromEntries(
