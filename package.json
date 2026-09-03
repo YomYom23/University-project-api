@@ -4,11 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "bun run ./src/server.ts",
     "dev": "bun run --watch ./src/server.ts",
     "contract:emit": "prisma contract emit"
   },
   "dependencies": {
+    "@langchain/anthropic": "^1.5.9",
+    "@langchain/core": "^1.2.9",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "@prisma/orm-postgres": "^8.0.0-rc.8",
@@ -19,12 +21,13 @@
     "express": "^4.22.2",
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^9.0.3",
+    "langchain": "^1.5.10",
     "morgan": "^1.10.1",
-    "nodemon": "^3.1.14",
     "pg": "^8.22.0",
     "pug": "^3.0.4"
   },
   "devDependencies": {
+    "@prisma/cli": "^8.0.0-rc.12",
     "@prisma/cli-engine": "0.2.3",
     "@types/bun": "latest",
     "@types/cookie-parser": "^1.4.10",
@@ -35,7 +38,6 @@
     "@types/pg": "^8.20.2",
     "dotenv": "^17.4.2",
     "prisma": "^8.0.0-rc.10",
-    "tsx": "^4.23.12",
     "typescript": "^7.0.2"
   }
 }

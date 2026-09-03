@@ -12,16 +12,19 @@ rate, etc.) intended for matching. Persistence is PostgreSQL via Prisma.
 ## Commands
 
 ```bash
-npm run dev        # Run the real server: nodemon + tsx watching src/, entry src/server.ts (port 3000)
+bun run dev         # Run the server: bun --watch, entry src/server.ts (port 3000)
+bun run start       # Run the server without watch mode (same entry, no reload)
 npx prisma generate            # Regenerate the Prisma client into generated/prisma (REQUIRED after schema changes)
 npx prisma migrate dev --name <name>   # Create + apply a migration in dev
 npx prisma migrate deploy      # Apply existing migrations (no new migration)
 npx prisma studio              # Browse the DB
 ```
 
-There is no build, lint, or test setup. `npm start` (`node ./bin/www`) is dead
-express-generator scaffolding — it `require()`s `src/server.ts` as CommonJS,
-which fails (the app is ESM and never exports `app`). Always use `npm run dev`.
+There is no build, lint, or test setup. The runtime is Bun, not Node —
+scripts run via `bun run` and TypeScript executes directly with no separate
+watcher/transpile step (no nodemon, no tsx). The old express-generator
+`bin/www` entry point has been removed; `src/server.ts` is the only entry
+and self-listens via `app.listen(3000)`.
 
 ## Architecture
 
@@ -58,10 +61,10 @@ unprotected.
 
 - `tsconfig.json` uses `nodenext` + `verbatimModuleSyntax` +
   `allowImportingTsExtensions`. Relative imports carry explicit extensions —
-  `.ts` for source files run by tsx, `.js` for the generated Prisma client.
+  `.ts` for source files run by Bun, `.js` for the generated Prisma client.
   Match the existing pattern in the file you edit.
 - Use `import type { ... }` for type-only imports (verbatimModuleSyntax enforces it).
-- No transpile/emit step: tsx executes `.ts` directly (`emitDeclarationOnly` is set).
+- No transpile/emit step: Bun executes `.ts` directly (`emitDeclarationOnly` is set).
 
 ### Environment variables (`.env`, gitignored)
 

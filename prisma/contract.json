@@ -174,7 +174,7 @@
               "dateOfBirth": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamp-temporal@1",
+                  "codecId": "pg/timestamp-string@1",
                   "kind": "scalar",
                   "typeParams": {
                     "precision": 3
@@ -217,14 +217,6 @@
                   "kind": "scalar"
                 }
               },
-              "intendedMajors": {
-                "many": true,
-                "nullable": true,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                }
-              },
               "lastName": {
                 "nullable": false,
                 "type": {
@@ -247,6 +239,14 @@
                 }
               },
               "preferredLocations": {
+                "many": true,
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "preferredMajors": {
                 "many": true,
                 "nullable": true,
                 "type": {
@@ -348,9 +348,6 @@
                 "highSchool": {
                   "column": "highSchool"
                 },
-                "intendedMajors": {
-                  "column": "intendedMajors"
-                },
                 "lastName": {
                   "column": "lastName"
                 },
@@ -362,6 +359,9 @@
                 },
                 "preferredLocations": {
                   "column": "preferredLocations"
+                },
+                "preferredMajors": {
+                  "column": "preferredMajors"
                 },
                 "preferredRegion": {
                   "column": "preferredRegion"
@@ -658,7 +658,7 @@
                   "nullable": true
                 },
                 "dateOfBirth": {
-                  "codecId": "pg/timestamp-temporal@1",
+                  "codecId": "pg/timestamp-string@1",
                   "nativeType": "timestamp",
                   "nullable": false,
                   "typeParams": {
@@ -694,15 +694,6 @@
                   "nativeType": "text",
                   "nullable": true
                 },
-                "intendedMajors": {
-                  "codecId": "pg/text@1",
-                  "many": true,
-                  "nativeType": "text",
-                  "noCheck": [
-                    "elementNotNull"
-                  ],
-                  "nullable": true
-                },
                 "lastName": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -719,6 +710,15 @@
                   "nullable": true
                 },
                 "preferredLocations": {
+                  "codecId": "pg/text@1",
+                  "many": true,
+                  "nativeType": "text",
+                  "noCheck": [
+                    "elementNotNull"
+                  ],
+                  "nullable": true
+                },
+                "preferredMajors": {
                   "codecId": "pg/text@1",
                   "many": true,
                   "nativeType": "text",
@@ -790,7 +790,13 @@
                 ],
                 "name": "StudentProfile_pkey"
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "userId"
+                  ]
+                }
+              ]
             },
             "UniversityProfile": {
               "columns": {
@@ -1030,15 +1036,15 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "b4314285dd492188d8aca473e237efb9eebb5bec8ae41f8f29c0d49701b1cce0"
+    "storageHash": "1d0efce19dd518821b40602e8246a1ce59cfafa0ab1489d3b50dbe8b4247a0ae"
   },
   "execution": {
-    "executionHash": "9e0c8144aca93fafc2706549820d26a2fd1349109f20fa4b558687ed0edf78f5",
+    "executionHash": "e853f56b00b23938ad3fbd689d9bb07c3411d8066e574174900a60fe73bda0a9",
     "mutations": {
       "defaults": [
         {
           "onCreate": {
-            "id": "cuid2",
+            "id": "uuidv4",
             "kind": "generator"
           },
           "ref": {

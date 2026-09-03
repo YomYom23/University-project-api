@@ -33,9 +33,9 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'b4314285dd492188d8aca473e237efb9eebb5bec8ae41f8f29c0d49701b1cce0'>;
+  StorageHashBase<'1d0efce19dd518821b40602e8246a1ce59cfafa0ab1489d3b50dbe8b4247a0ae'>;
 export type ExecutionHash =
-  ExecutionHashBase<'9e0c8144aca93fafc2706549820d26a2fd1349109f20fa4b558687ed0edf78f5'>;
+  ExecutionHashBase<'e853f56b00b23938ad3fbd689d9bb07c3411d8066e574174900a60fe73bda0a9'>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -261,12 +261,12 @@ export type FieldOutputTypes = {
       readonly graduationYear: CodecTypes['pg/text@1']['output'] | null;
       readonly highSchool: CodecTypes['pg/text@1']['output'] | null;
       readonly careerGoals: CodecTypes['pg/text@1']['output'] | null;
+      readonly preferredMajors: ReadonlyArray<CodecTypes['pg/text@1']['output']> | null;
       readonly preferredLocations: ReadonlyArray<CodecTypes['pg/text@1']['output']> | null;
       readonly firstName: CodecTypes['pg/text@1']['output'];
       readonly lastName: CodecTypes['pg/text@1']['output'];
       readonly budgetRange: ReadonlyArray<CodecTypes['pg/int4@1']['output']> | null;
-      readonly dateOfBirth: CodecTypes['pg/timestamp-temporal@1']['output'];
-      readonly intendedMajors: ReadonlyArray<CodecTypes['pg/text@1']['output']> | null;
+      readonly dateOfBirth: TimestampString<3>;
       readonly phone: CodecTypes['pg/text@1']['output'] | null;
       readonly campusVibes: ReadonlyArray<CodecTypes['pg/text@1']['output']> | null;
       readonly classRank: CodecTypes['pg/text@1']['output'] | null;
@@ -316,12 +316,12 @@ export type FieldInputTypes = {
       readonly graduationYear: CodecTypes['pg/text@1']['input'] | null;
       readonly highSchool: CodecTypes['pg/text@1']['input'] | null;
       readonly careerGoals: CodecTypes['pg/text@1']['input'] | null;
+      readonly preferredMajors: ReadonlyArray<CodecTypes['pg/text@1']['input']> | null;
       readonly preferredLocations: ReadonlyArray<CodecTypes['pg/text@1']['input']> | null;
       readonly firstName: CodecTypes['pg/text@1']['input'];
       readonly lastName: CodecTypes['pg/text@1']['input'];
       readonly budgetRange: ReadonlyArray<CodecTypes['pg/int4@1']['input']> | null;
-      readonly dateOfBirth: CodecTypes['pg/timestamp-temporal@1']['input'];
-      readonly intendedMajors: ReadonlyArray<CodecTypes['pg/text@1']['input']> | null;
+      readonly dateOfBirth: CodecTypes['pg/timestamp-string@1']['input'];
       readonly phone: CodecTypes['pg/text@1']['input'] | null;
       readonly campusVibes: ReadonlyArray<CodecTypes['pg/text@1']['input']> | null;
       readonly classRank: CodecTypes['pg/text@1']['input'] | null;
@@ -368,17 +368,17 @@ export type StorageColumnTypes = {
       readonly careerGoals: CodecTypes['pg/text@1']['output'] | null;
       readonly classRank: CodecTypes['pg/text@1']['output'] | null;
       readonly country: CodecTypes['pg/text@1']['output'] | null;
-      readonly dateOfBirth: CodecTypes['pg/timestamp-temporal@1']['output'];
+      readonly dateOfBirth: TimestampString<3>;
       readonly extracurriculars: ReadonlyArray<CodecTypes['pg/text@1']['output']> | null;
       readonly firstName: CodecTypes['pg/text@1']['output'];
       readonly gpa: CodecTypes['pg/float8@1']['output'] | null;
       readonly graduationYear: CodecTypes['pg/text@1']['output'] | null;
       readonly highSchool: CodecTypes['pg/text@1']['output'] | null;
-      readonly intendedMajors: ReadonlyArray<CodecTypes['pg/text@1']['output']> | null;
       readonly lastName: CodecTypes['pg/text@1']['output'];
       readonly major: CodecTypes['pg/text@1']['output'] | null;
       readonly phone: CodecTypes['pg/text@1']['output'] | null;
       readonly preferredLocations: ReadonlyArray<CodecTypes['pg/text@1']['output']> | null;
+      readonly preferredMajors: ReadonlyArray<CodecTypes['pg/text@1']['output']> | null;
       readonly preferredRegion: CodecTypes['pg/text@1']['output'] | null;
       readonly priority: CodecTypes['pg/text@1']['output'] | null;
       readonly satScore: CodecTypes['pg/float8@1']['output'] | null;
@@ -423,17 +423,17 @@ export type StorageColumnInputTypes = {
       readonly careerGoals: CodecTypes['pg/text@1']['input'] | null;
       readonly classRank: CodecTypes['pg/text@1']['input'] | null;
       readonly country: CodecTypes['pg/text@1']['input'] | null;
-      readonly dateOfBirth: CodecTypes['pg/timestamp-temporal@1']['input'];
+      readonly dateOfBirth: CodecTypes['pg/timestamp-string@1']['input'];
       readonly extracurriculars: ReadonlyArray<CodecTypes['pg/text@1']['input']> | null;
       readonly firstName: CodecTypes['pg/text@1']['input'];
       readonly gpa: CodecTypes['pg/float8@1']['input'] | null;
       readonly graduationYear: CodecTypes['pg/text@1']['input'] | null;
       readonly highSchool: CodecTypes['pg/text@1']['input'] | null;
-      readonly intendedMajors: ReadonlyArray<CodecTypes['pg/text@1']['input']> | null;
       readonly lastName: CodecTypes['pg/text@1']['input'];
       readonly major: CodecTypes['pg/text@1']['input'] | null;
       readonly phone: CodecTypes['pg/text@1']['input'] | null;
       readonly preferredLocations: ReadonlyArray<CodecTypes['pg/text@1']['input']> | null;
+      readonly preferredMajors: ReadonlyArray<CodecTypes['pg/text@1']['input']> | null;
       readonly preferredRegion: CodecTypes['pg/text@1']['input'] | null;
       readonly priority: CodecTypes['pg/text@1']['input'] | null;
       readonly satScore: CodecTypes['pg/float8@1']['input'] | null;
@@ -583,6 +583,11 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/text@1';
                   readonly nullable: true;
                 };
+                readonly preferredMajors: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
                 readonly preferredLocations: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
@@ -605,14 +610,9 @@ type ContractBase = Omit<
                 };
                 readonly dateOfBirth: {
                   readonly nativeType: 'timestamp';
-                  readonly codecId: 'pg/timestamp-temporal@1';
+                  readonly codecId: 'pg/timestamp-string@1';
                   readonly nullable: false;
                   readonly typeParams: { readonly precision: 3 };
-                };
-                readonly intendedMajors: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: true;
                 };
                 readonly phone: {
                   readonly nativeType: 'text';
@@ -655,7 +655,7 @@ type ContractBase = Omit<
                 readonly columns: readonly ['userId'];
                 readonly name: 'StudentProfile_pkey';
               };
-              uniques: readonly [];
+              uniques: readonly [{ readonly columns: readonly ['userId'] }];
               indexes: readonly [];
               foreignKeys: readonly [
                 {
@@ -937,6 +937,11 @@ type ContractBase = Omit<
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
+              readonly preferredMajors: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+                readonly many: true;
+              };
               readonly preferredLocations: {
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
@@ -959,14 +964,9 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamp-temporal@1';
+                  readonly codecId: 'pg/timestamp-string@1';
                   readonly typeParams: { readonly precision: 3 };
                 };
-              };
-              readonly intendedMajors: {
-                readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-                readonly many: true;
               };
               readonly phone: {
                 readonly nullable: true;
@@ -1026,12 +1026,12 @@ type ContractBase = Omit<
                 readonly graduationYear: { readonly column: 'graduationYear' };
                 readonly highSchool: { readonly column: 'highSchool' };
                 readonly careerGoals: { readonly column: 'careerGoals' };
+                readonly preferredMajors: { readonly column: 'preferredMajors' };
                 readonly preferredLocations: { readonly column: 'preferredLocations' };
                 readonly firstName: { readonly column: 'firstName' };
                 readonly lastName: { readonly column: 'lastName' };
                 readonly budgetRange: { readonly column: 'budgetRange' };
                 readonly dateOfBirth: { readonly column: 'dateOfBirth' };
-                readonly intendedMajors: { readonly column: 'intendedMajors' };
                 readonly phone: { readonly column: 'phone' };
                 readonly campusVibes: { readonly column: 'campusVibes' };
                 readonly classRank: { readonly column: 'classRank' };
@@ -1202,7 +1202,7 @@ type ContractBase = Omit<
             readonly table: 'User';
             readonly column: 'id';
           };
-          readonly onCreate: { readonly kind: 'generator'; readonly id: 'cuid2' };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
         },
       ];
     };

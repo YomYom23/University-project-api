@@ -1,41 +1,13 @@
 import type { Request, Response } from 'express';
-import { db } from '../config/db.ts';
-
-
-const createStudentProfile = async (req: Request, res: Response) => {
-    const userId: string = req.query.userId as string;
-    const {
-        firstName, lastName, age, country, gpa, sat, act, major,
-        highSchool, graduationYear, preferredMajors, preferredLocations, size, budgetRange,
-    } = req.body;
-
-    //Check if user exists
-    const user = await db.orm.public.User
-        .where({ id: userId })
-        .first()
-
-    if(!user) {
-        return res.status(400).json({error: "User not found"})
-    }
-
-    const updatedUser = await prisma.user.update({
-        where: { id: userId },
-        data: {
-            firstName, lastName, age, country, gpa, sat, act, major,
-            highSchool, graduationYear, preferredMajors, preferredLocations, size, budgetRange,
-        }
-    })
-
-
-};
+import { db } from '../../prisma/config/db.ts';
 
 const updateUser = async (req: Request, res: Response) => {
-    const { userData, studentData } = req.body;
+    const { userData, studentData, universityData } = req.body;
     const userId = req.user?.id
 
     const user = await db.orm.public.User
         .where({ id: userId })
-        .include("StudentProfile")
+        .include("studentProfile")
         .first()
 
     if(!user) {
@@ -45,26 +17,50 @@ const updateUser = async (req: Request, res: Response) => {
     if(studentData && !user.studentProfile) {
        await db.orm.public.StudentProfile.create({
            firstName: req.body.studentData.firstName,
+           lastName: req.body.studentData.lastName,
+           dateOfBirth: req.body.studentData.dateOfBirth,
+           userId: userId,
        })
     }
 
-    const updateFields: Record<string, any> = Object.fromEntries(
-        Object.entries({ ...req.body.userData, ...req.body.studentData, ...req.body.universityData })
-            .filter(([field, value]) => value !== undefined)
-    )
+
+    const userFields: Record<string, any> = userData !== undefined ? Object.fromEntries(
+        Object.entries(userData)
+            .filter(([_, value]) => value !== undefined)
+    ) : {}
 
 
+    const studentFields: Record<string, any> = studentData !== undefined ? Object.fromEntries(
+        Object.entries(studentData)
+            .filter(([_, value]) => value !== undefined)
+    ) : {}
 
 
-    if(Object.keys(updateFields).length === 0) {
+    const universityFields: Record<string, any> = universityData !== undefined ? Object.fromEntries(
+        Object.entries(universityData)
+            .filter(([_, value]) => value !== undefined)
+    ) : {}
+
+
+    if(Object.keys({...userFields, ...studentFields, ...universityFields}).length === 0) {
         return res.status(400).json({error: "No fields provided to update"})
     }
 
-    const updatedUser = await prisma.user.
+    const updatedUser = await db.orm.public.User
+        .where({ id: userId })
+        .updateAll(userFields)
+
+    const updatedStudent = await db.orm.public.StudentProfile
+        .where({ userId: userId })
+        .updateAll(studentFields)
+
 
     res.status(200).json({
         status: "success",
-        data: updatedUser,
+        data: {
+            updatedUser,
+            updatedStudent,
+        },
     })
 
 }

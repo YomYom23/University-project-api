@@ -17,7 +17,7 @@ namespace public {
   }
 
   model User {
-    id                String             @id(map: "User_pkey") @default(cuid(2))
+    id                String             @id(map: "User_pkey") @default(uuid())
     email             String
     password          String
     role              pg.enum(UserRole)  @default("STUDENT")
@@ -31,7 +31,7 @@ namespace public {
   }
 
   model StudentProfile {
-    userId             String               @id(map: "StudentProfile_pkey")
+    userId             String              @id(map: "StudentProfile_pkey") @unique
     gpa                Float?
     satScore           Float?
     actScore           Float?
@@ -40,12 +40,12 @@ namespace public {
     graduationYear     String?
     highSchool         String?
     careerGoals        String?
+    preferredMajors String[]? @noCheck(elementNotNull)
     preferredLocations String[]?            @noCheck(elementNotNull)
     firstName          String
     lastName           String
     budgetRange        Int[]?               @noCheck(elementNotNull)
-    dateOfBirth        Timestamp(3)
-    intendedMajors     String[]?            @noCheck(elementNotNull)
+    dateOfBirth        TimestampString(3)
     phone              String?
     campusVibes        String[]?            @noCheck(elementNotNull)
     classRank          String?

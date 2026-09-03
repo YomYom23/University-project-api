@@ -1,6 +1,6 @@
 import "dotenv/config"
 import jwt, {type JwtPayload} from "jsonwebtoken"
-import { prisma } from "../config/db.ts"
+import { db } from "../../prisma/config/db.ts"
 import type { Request, Response, NextFunction } from "express"
 
 
@@ -33,9 +33,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
         // Verify token and extract the user id
         const decoded = jwt.verify(token, jwtSecret) as JwtPayload;
 
-        const user = await prisma.user.findUnique({
-            where: { id: decoded.id }
-        });
+        const user = await db.orm.public.User.where({ id: decoded.id }).first();
 
         if (!user) {
             return res.status(401).json({ error: "user no longer exists" });

@@ -1,9 +1,9 @@
 import "dotenv/config"
-import { db } from "../../prisma/db.ts"
+import { db } from "../../prisma/config/db.ts"
 
 const connectDB = async () => {
     try {
-        await db.orm.User.count();
+        await db.orm.public.User.first();
         console.log("DB connected via prisma");
     } catch (err) {
         if (err instanceof Error) {

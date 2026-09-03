@@ -1,5 +1,5 @@
 import type { Request, Response } from "express"
-import { prisma } from "../config/db.ts"
+import { db } from "../../prisma/config/db.ts"
 import bcrypt from "bcryptjs"
 import { generateToken } from "../utils/generateToken.ts"
 import type {UserRole} from "../../generated/prisma/enums.ts";
@@ -8,9 +8,7 @@ const registration = async (req: Request, res: Response) => {
     const { email, password, role } = await req.body;
 
     //Check if user already exists
-    const userExists = await prisma.user.findUnique({
-        where: { email }
-    })
+    const userExists = await db.orm.public.User.where({ email }).first()
 
     if(userExists) {
         return res.status(400).json({message: "user already exists"})
@@ -21,12 +19,10 @@ const registration = async (req: Request, res: Response) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     //Create user
-    const user = await prisma.user.create({
-        data: {
-            email,
-            password: hashedPassword,
-            role: role as UserRole,
-        }
+    const user = await db.orm.public.User.create({
+        email,
+        password: hashedPassword,
+        role: role as UserRole,
     })
 
 
@@ -44,9 +40,7 @@ const login = async (req: Request, res: Response) => {
     const { email, password } = await req.body;
 
     //Check if user exists
-    const user = await prisma.user.findUnique({
-        where: { email }
-    })
+    const user = await db.orm.public.User.where({ email }).first()
 
     if(!user) {
         return res.status(400).json({message: "Invalid email or password"})
@@ -81,9 +75,7 @@ const logout = async (req: Request, res: Response) => {
 }
 
 const checkAuthStatus = async (req: Request ,res: Response) => {
-    const user = await prisma.user.findUnique({
-        where: { id: req.user?.id },
-    })
+    const user = await db.orm.public.User.where({ id: req.user?.id }).first()
 
     if(!user){
         return res.status(401).json({isAuthenticated: false})
