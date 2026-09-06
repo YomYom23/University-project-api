@@ -76,14 +76,16 @@ unprotected.
 
 ## Shared workspace memory
 
-This repo is also checked out as a submodule of an outer agent workspace whose
-long-term memory starts at `../../wiki/index.md` (that path resolves from the
-submodule checkout; in a standalone clone the workspace may not be present).
+This repo is a submodule of the `versiti-platform` parent repository, which is in
+turn a submodule of an outer agent workspace. The workspace's long-term memory
+starts at `../../../wiki/index.md` — three levels up, from
+`projects/versiti-platform/University-project-api/`. In a standalone clone the
+workspace is not present and that path will not resolve.
 
 - Read it only when the task needs cross-project or durable context that isn't in
   this repo. Start at that index and follow only the links relevant to the task.
 - When you learn a durable fact, decision, or relationship while working here,
-  record it by following the write workflow described in `../../wiki/index.md`.
+  record it by following the write workflow described in `../../../wiki/index.md`.
 - Do not copy wiki content into this repo.
 - This project's own files remain authoritative for its current code and
   behavior; where they disagree with the wiki, the files here win.
