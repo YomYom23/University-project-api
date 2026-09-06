@@ -73,3 +73,17 @@ unprotected.
 - `JWT_EXPIRES_IN` — token lifetime (note: the `.env` key is misspelled
   `JWT_EXPIRES_I`, but the code reads `JWT_EXPIRES_IN`, so it falls back to `"7d"`)
 - `NODE_ENV` — gates Prisma query logging and the `secure` cookie flag
+
+## Shared workspace memory
+
+This repo is also checked out as a submodule of an outer agent workspace whose
+long-term memory starts at `../../wiki/index.md` (that path resolves from the
+submodule checkout; in a standalone clone the workspace may not be present).
+
+- Read it only when the task needs cross-project or durable context that isn't in
+  this repo. Start at that index and follow only the links relevant to the task.
+- When you learn a durable fact, decision, or relationship while working here,
+  record it by following the write workflow described in `../../wiki/index.md`.
+- Do not copy wiki content into this repo.
+- This project's own files remain authoritative for its current code and
+  behavior; where they disagree with the wiki, the files here win.
