@@ -21,7 +21,11 @@ namespace public {
     email             String
     password          String
     role              pg.enum(UserRole)  @default("STUDENT")
-    createdAt         Timestamp(3)       @default(now())
+    // TimestampString, not Timestamp: the Timestamp codec decodes through
+    // Temporal, which neither Bun nor Node exposes a global for, so any read
+    // of this column threw at runtime. Both map to the same Postgres
+    // timestamp(3) column — this changes the decoder only, not storage.
+    createdAt         TimestampString(3) @default(now())
     onboardingStep    Int?               @default(0)
     studentProfile    StudentProfile?
     universityProfile UniversityProfile?

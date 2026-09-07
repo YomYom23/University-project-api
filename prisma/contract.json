@@ -485,7 +485,7 @@
               "createdAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamp-temporal@1",
+                  "codecId": "pg/timestamp-string@1",
                   "kind": "scalar",
                   "typeParams": {
                     "precision": 3
@@ -869,7 +869,7 @@
             "User": {
               "columns": {
                 "createdAt": {
-                  "codecId": "pg/timestamp-temporal@1",
+                  "codecId": "pg/timestamp-string@1",
                   "default": {
                     "expression": "now()",
                     "kind": "function"
@@ -1036,7 +1036,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "1d0efce19dd518821b40602e8246a1ce59cfafa0ab1489d3b50dbe8b4247a0ae"
+    "storageHash": "c73787eba881a2ea299b07aaba7c6ac17df55f94b030df2526ac2409d90c3e8a"
   },
   "execution": {
     "executionHash": "e853f56b00b23938ad3fbd689d9bb07c3411d8066e574174900a60fe73bda0a9",
