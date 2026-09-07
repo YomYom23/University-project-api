@@ -33,7 +33,12 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
         // Verify token and extract the user id
         const decoded = jwt.verify(token, jwtSecret) as JwtPayload;
 
-        const user = await db.orm.public.User.where({ id: decoded.id }).first();
+        // Exactly the fields Express.Request['user'] declares — notably not
+        // the password hash, which has no business riding on every request.
+        const user = await db.orm.public.User
+            .where({ id: decoded.id })
+            .select("id", "email", "role")
+            .first();
 
         if (!user) {
             return res.status(401).json({ error: "user no longer exists" });

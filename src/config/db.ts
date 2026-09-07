@@ -3,7 +3,9 @@ import { db } from "../../prisma/config/db.ts"
 
 const connectDB = async () => {
     try {
-        await db.orm.public.User.first();
+        // Reachability check only — one scalar is enough, no need to decode a
+        // whole row on every boot.
+        await db.orm.public.User.select("id").first();
         console.log("DB connected via prisma");
     } catch (err) {
         if (err instanceof Error) {
