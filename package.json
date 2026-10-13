@@ -9,22 +9,15 @@
     "contract:emit": "prisma contract emit"
   },
   "dependencies": {
-    "@langchain/anthropic": "^1.5.9",
-    "@langchain/core": "^1.2.9",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "@prisma/orm-postgres": "^8.0.0-rc.8",
     "bcryptjs": "^3.0.3",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.6",
-    "debug": "~2.6.9",
     "express": "^4.22.2",
-    "http-errors": "~1.6.3",
     "jsonwebtoken": "^9.0.3",
-    "langchain": "^1.5.10",
-    "morgan": "^1.10.1",
-    "pg": "^8.22.0",
-    "pug": "^3.0.4"
+    "pg": "^8.22.0"
   },
   "devDependencies": {
     "@prisma/cli": "^8.0.0-rc.12",
